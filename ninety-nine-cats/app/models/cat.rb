@@ -11,8 +11,12 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
+require "date"
+require "action_view"
 class Cat < ApplicationRecord
+    include ActionView::Helpers::DateHelper
     CAT_COLORS = ["white", "black", "orange", "grey", "brown"]
+    
     validates :color, presence: true, inclusion: { in: CAT_COLORS}
     validates :sex, presence: true, inclusion: { in: %w(M F) }
     validate :birth_date_cannot_be_future 
@@ -22,4 +26,11 @@ class Cat < ApplicationRecord
             errors.add(:birthdate, "Invalid Cat Birthdate")
         end
     end
+
+    def age
+        # time_ago_in_words(Time.now - Date.today)
+        Date.today.year - self.birthdate.year
+    end
+
+
 end
