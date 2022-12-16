@@ -12,5 +12,14 @@
 #  updated_at  :datetime         not null
 #
 class Cat < ApplicationRecord
-    
+    CAT_COLORS = ["white", "black", "orange", "grey", "brown"]
+    validates :color, presence: true, inclusion: { in: CAT_COLORS}
+    validates :sex, presence: true, inclusion: { in: %w(M F) }
+    validate :birth_date_cannot_be_future 
+
+    def birth_date_cannot_be_future
+        if birthdate.present? && birthdate > Date.today
+            errors.add(:birthdate, "Invalid Cat Birthdate")
+        end
+    end
 end
